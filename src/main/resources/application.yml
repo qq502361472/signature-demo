@@ -1,0 +1,11 @@
+signature:
+  secretGroup:
+    - code: TEST_CODE1
+      accessKey:
+        test-key1: L5nqjXlcziKIDa6b
+        test-key2: mSlUAzz5ff9ViP2H
+    - code: TEST_CODE2
+      accessKey:
+        testKeyId21: testKeySecret21
+        testKeyId22: testKeySecret22
+
