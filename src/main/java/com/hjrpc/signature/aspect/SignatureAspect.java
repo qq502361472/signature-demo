@@ -14,6 +14,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -48,10 +49,10 @@ public class SignatureAspect {
     public static final int ONCE_EXPIRE_TIME = 30;
 
     private final Map<String, Map<String, String>> signatureAccessKeyGroupMap;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
 
-    public SignatureAspect(SignatureProperties signatureProperties, RedisTemplate<String, Object> redisTemplate) {
-        this.redisTemplate = redisTemplate;
+    public SignatureAspect(SignatureProperties signatureProperties, StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
         this.signatureAccessKeyGroupMap = signatureProperties.getSecretGroup()
                 .stream().collect(Collectors.toMap(SignatureProperties.AccessCodeEntity::getCode, SignatureProperties.AccessCodeEntity::getAccessKey));
     }
@@ -67,7 +68,7 @@ public class SignatureAspect {
     public Object doAround(ProceedingJoinPoint pjp, Signature signature) throws Throwable {
         String signRedisKey = this.checkSign(StrUtil.isBlank(signature.signatureCode()) ? signature.value() : signature.signatureCode());
         Object proceed = pjp.proceed();
-        redisTemplate.opsForValue().set(signRedisKey, StringUtils.EMPTY, ONCE_EXPIRE_TIME, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(signRedisKey, StringUtils.EMPTY, ONCE_EXPIRE_TIME, TimeUnit.MINUTES);
         return proceed;
     }
 
@@ -77,7 +78,7 @@ public class SignatureAspect {
         String timestamp = request.getHeader(SignatureConstant.SIGNATURE_TIMESTAMP_KEY);
         String sign = request.getHeader(SignatureConstant.SIGNATURE_SIGN_KEY);
         // 校验请求是否重复
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(sign))) {
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(sign))) {
             throw new SignException("重复的请求");
         }
         // 系统中读取accessKeySecret
@@ -95,8 +96,10 @@ public class SignatureAspect {
         Map<String, String[]> params = getParamsMap(request);
         //获取path variable（对应@PathVariable）
         Collection<String> paths = getPaths(request);
+        long start = System.currentTimeMillis();
         // 验证签名
         SignUtil.checkSign(body, params, paths, headAccessKeyId, accessKeySecret, Long.parseLong(timestamp), sign);
+        System.out.println("验签耗时："+(System.currentTimeMillis()-start)+"ms");
         return SignatureConstant.SIGNATURE_ACCESS_ONCE_PREFIX + sign;
     }
 
