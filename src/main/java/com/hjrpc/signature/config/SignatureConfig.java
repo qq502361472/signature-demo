@@ -1,8 +1,8 @@
-package com.hjrpc.signaturedemo.config;
+package com.hjrpc.signature.config;
 
-import com.hjrpc.signaturedemo.aspect.SignatureAspect;
-import com.hjrpc.signaturedemo.filter.RequestCachingFilter;
-import com.hjrpc.signaturedemo.properties.SignatureProperties;
+import com.hjrpc.signature.aspect.SignatureAspect;
+import com.hjrpc.signature.filter.RequestCachingFilter;
+import com.hjrpc.signature.properties.SignatureProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

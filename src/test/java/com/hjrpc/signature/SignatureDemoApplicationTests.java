@@ -1,4 +1,4 @@
-package com.hjrpc.signaturedemo;
+package com.hjrpc.signature;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

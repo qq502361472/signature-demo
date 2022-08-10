@@ -1,4 +1,4 @@
-package com.hjrpc.signaturedemo.constant;
+package com.hjrpc.signature.constant;
 
 public interface SignatureConstant {
     String SIGNATURE_TIMESTAMP_KEY = "timestamp";

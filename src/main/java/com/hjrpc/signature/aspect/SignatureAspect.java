@@ -1,14 +1,13 @@
-package com.hjrpc.signaturedemo.aspect;
+package com.hjrpc.signature.aspect;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
-import com.hjrpc.signaturedemo.annoation.Signature;
-import com.hjrpc.signaturedemo.constant.SignatureConstant;
-import com.hjrpc.signaturedemo.exception.SignException;
-import com.hjrpc.signaturedemo.inputstream.BodyReaderRequestWrapper;
-import com.hjrpc.signaturedemo.properties.SignatureProperties;
-import com.hjrpc.signaturedemo.util.SignUtil;
-import lombok.RequiredArgsConstructor;
+import com.hjrpc.signature.annoation.Signature;
+import com.hjrpc.signature.constant.SignatureConstant;
+import com.hjrpc.signature.exception.SignException;
+import com.hjrpc.signature.inputstream.BodyReaderRequestWrapper;
+import com.hjrpc.signature.properties.SignatureProperties;
+import com.hjrpc.signature.util.SignUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;

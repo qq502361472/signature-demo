@@ -1,4 +1,4 @@
-package com.hjrpc.signaturedemo.annoation;
+package com.hjrpc.signature.annoation;
 
 import org.springframework.core.annotation.AliasFor;
 

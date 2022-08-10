@@ -1,6 +1,6 @@
-package com.hjrpc.signaturedemo.controller;
+package com.hjrpc.controller;
 
-import com.hjrpc.signaturedemo.annoation.Signature;
+import com.hjrpc.signature.annoation.Signature;
 import lombok.Data;
 import org.springframework.web.bind.annotation.*;
 

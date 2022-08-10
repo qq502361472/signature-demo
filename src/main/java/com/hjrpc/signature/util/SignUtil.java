@@ -1,4 +1,4 @@
-package com.hjrpc.signaturedemo.util;
+package com.hjrpc.signature.util;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;

@@ -1,4 +1,4 @@
-package com.hjrpc.signaturedemo.inputstream;
+package com.hjrpc.signature.inputstream;
 
 import cn.hutool.core.io.IoUtil;
 
