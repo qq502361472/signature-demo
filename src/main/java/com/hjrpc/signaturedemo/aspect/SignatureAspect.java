@@ -66,9 +66,9 @@ public class SignatureAspect {
             "|| @annotation(org.springframework.web.bind.annotation.PatchMapping))"
     )
     public Object doAround(ProceedingJoinPoint pjp, Signature signature) throws Throwable {
-        String onceKeyString = this.checkSign(StrUtil.isBlank(signature.signatureCode()) ? signature.value() : signature.signatureCode());
+        String signRedisKey = this.checkSign(StrUtil.isBlank(signature.signatureCode()) ? signature.value() : signature.signatureCode());
         Object proceed = pjp.proceed();
-        redisTemplate.opsForValue().set(onceKeyString, StringUtils.EMPTY, ONCE_EXPIRE_TIME, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(signRedisKey, StringUtils.EMPTY, ONCE_EXPIRE_TIME, TimeUnit.MINUTES);
         return proceed;
     }
 
@@ -77,7 +77,6 @@ public class SignatureAspect {
         String headAccessKeyId = request.getHeader(SignatureConstant.SIGNATURE_ACCESS_KEY_ID_KEY);
         String timestamp = request.getHeader(SignatureConstant.SIGNATURE_TIMESTAMP_KEY);
         String sign = request.getHeader(SignatureConstant.SIGNATURE_SIGN_KEY);
-        String once = SignatureConstant.SIGNATURE_ACCESS_ONCE_PREFIX + request.getHeader(SignatureConstant.SIGNATURE_ACCESS_ONCE);
         // 系统中读取accessKeySecret
         Map<String, String> signatureAccessKeyMap = this.signatureAccessKeyGroupMap.get(signatureCode);
         // 系统中读取accessKeySecret
@@ -86,7 +85,7 @@ public class SignatureAspect {
             throw new SignException("验签失败，无效的accessKeyId");
         }
         // 校验请求是否重复
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(once))) {
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(sign))) {
             throw new SignException("重复的请求");
         }
         // 校验签名的头信息是否合法
@@ -99,7 +98,7 @@ public class SignatureAspect {
         Collection<String> paths = getPaths(request);
         // 验证签名
         SignUtil.checkSign(body, params, paths, headAccessKeyId, accessKeySecret, Long.parseLong(timestamp), sign);
-        return once;
+        return SignatureConstant.SIGNATURE_ACCESS_ONCE_PREFIX + sign;
     }
 
     private void checkAccessKeyHeaders(String headAccessKeyId, Map<String, String> signatureAccessKeyMap, String timestamp, String sign) {

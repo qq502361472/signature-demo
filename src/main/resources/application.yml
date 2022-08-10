@@ -8,4 +8,10 @@ signature:
       accessKey:
         testKeyId21: testKeySecret21
         testKeyId22: testKeySecret22
-
+spring:
+  redis:
+    host: 192.168.56.102
+    port: 6379
+    lettuce:
+      shutdown-timeout: 0
+    database: 0
