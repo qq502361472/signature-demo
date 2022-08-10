@@ -76,16 +76,16 @@ public class SignatureAspect {
         String headAccessKeyId = request.getHeader(SignatureConstant.SIGNATURE_ACCESS_KEY_ID_KEY);
         String timestamp = request.getHeader(SignatureConstant.SIGNATURE_TIMESTAMP_KEY);
         String sign = request.getHeader(SignatureConstant.SIGNATURE_SIGN_KEY);
+        // 校验请求是否重复
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(sign))) {
+            throw new SignException("重复的请求");
+        }
         // 系统中读取accessKeySecret
         Map<String, String> signatureAccessKeyMap = this.signatureAccessKeyGroupMap.get(signatureCode);
         // 系统中读取accessKeySecret
         String accessKeySecret = signatureAccessKeyMap.get(headAccessKeyId);
         if (StringUtils.isBlank(accessKeySecret)) {
             throw new SignException("验签失败，无效的accessKeyId");
-        }
-        // 校验请求是否重复
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(sign))) {
-            throw new SignException("重复的请求");
         }
         // 校验签名的头信息是否合法
         checkAccessKeyHeaders(headAccessKeyId, signatureAccessKeyMap, timestamp, sign);
