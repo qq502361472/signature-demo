@@ -36,12 +36,12 @@ public class SignatureAspect {
     /**
      * 请求过期时间 10分钟
      */
-    public static final int EXPIRE_TIME = 10 * 60 * 60;
+    public static final int EXPIRE_TIME = 10 * 60 * 1000;
 
     /**
      * 服务器误差时间 2分钟
      */
-    public static final int ERROR_LIMIT = -2 * 60 * 60;
+    public static final int ERROR_LIMIT = -2 * 60 * 1000;
 
     /**
      * 验证重复请求30分钟后可再次调用
