@@ -6,7 +6,9 @@ import cn.hutool.json.JSONObject;
 import com.hjrpc.signature.inputstream.BodyReaderRequestWrapper;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -24,7 +26,13 @@ public class RequestCachingFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response
             , FilterChain filterChain) {
         try {
-            filterChain.doFilter(new BodyReaderRequestWrapper(request), response);
+            HttpServletRequest customRequest = request;
+            String contentType = request.getContentType();
+            // 这里必须判断，否则上传文件时会出现异常
+            if(StringUtils.isNotBlank(contentType)&&contentType.contains(MediaType.APPLICATION_JSON_VALUE)){
+                customRequest = new BodyReaderRequestWrapper(request);
+            }
+            filterChain.doFilter(customRequest, response);
         } catch (IOException | ServletException e) {
             log.error("RequestCachingFilter异常：", e);
             printRequest(request);
