@@ -29,7 +29,7 @@ public class RequestCachingFilter extends OncePerRequestFilter {
             HttpServletRequest customRequest = request;
             String contentType = request.getContentType();
             // 这里必须判断，否则上传文件时会出现异常
-            if(StringUtils.isNotBlank(contentType)&&contentType.contains(MediaType.APPLICATION_JSON_VALUE)){
+            if (StringUtils.isNotBlank(contentType) && contentType.contains(MediaType.APPLICATION_JSON_VALUE)) {
                 customRequest = new BodyReaderRequestWrapper(request);
             }
             filterChain.doFilter(customRequest, response);
